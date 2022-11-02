@@ -1,6 +1,9 @@
-// ignore_for_file: camel_case_types, prefer_const_literals_to_create_immutables, unused_element
-import 'package:barcode_scan/barcode_scan.dart';
+import 'package:first_app/utils/dioApi.dart';
+import 'package:first_app/utils/i18n.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
+import 'package:first_app/utils/kvStore.dart';
 
 //有状态
 class BarCodePage extends StatefulWidget {
@@ -13,13 +16,29 @@ class BarCodePage extends StatefulWidget {
 class _BarCodeState extends State<BarCodePage> {
   final txtBarCode = TextEditingController();
   bool showClear = false;
-  final FocusNode pwdFocusNode = FocusNode();
+  final FocusNode barCodeFocusNode = FocusNode();
+  String plantID = '', identifyID = '';
+
+  late var labBarCode = '',
+      labPartNo = '',
+      labPartName = '',
+      labStatus = '',
+      labStation = '',
+      labProductDt = '',
+      labCreateDt = '';
+
+  @override
+  //生命周期函数
+  //该回调只会调用一次，当屏幕首次渲染第一帧的时候调用
+  void initState() {
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('123123'),
+        title: Text(ModalRoute.of(context)!.settings.arguments.toString()),
         elevation: 0,
         leading: const BackButton(),
       ),
@@ -33,9 +52,9 @@ class _BarCodeState extends State<BarCodePage> {
                 child: Container(
                   margin: const EdgeInsets.symmetric(horizontal: 5),
                   child: TextField(
-                    focusNode: pwdFocusNode,
+                    focusNode: barCodeFocusNode,
                     controller: txtBarCode,
-                    maxLength: 32,
+                    maxLength: 36,
                     keyboardType: TextInputType.text,
                     onTap: () {
                       setState(() {
@@ -43,7 +62,7 @@ class _BarCodeState extends State<BarCodePage> {
                       });
                     },
                     onEditingComplete: () {
-                      pwdFocusNode.unfocus();
+                      barCodeFocusNode.unfocus();
                       setState(() {
                         showClear = false;
                       });
@@ -51,7 +70,7 @@ class _BarCodeState extends State<BarCodePage> {
                     decoration: InputDecoration(
                       prefixIcon: const Icon(Icons.fullscreen_sharp,
                           size: 25, color: Colors.blue),
-                      hintText: '条码',
+                      hintText: I18n.of(context).barCode,
                       suffixIcon: Visibility(
                         visible: showClear,
                         child: GestureDetector(
@@ -78,10 +97,15 @@ class _BarCodeState extends State<BarCodePage> {
                         borderRadius: BorderRadius.circular(25),
                       )),
                     ),
-                    onPressed: () async {},
-                    child: const Text(
-                      '查询',
-                      style: TextStyle(
+                    onPressed: () async {
+                      plantID = await kvStore.getString('plantID') as String;
+                      identifyID =
+                          await kvStore.getString('identifyID') as String;
+                      await getData(txtBarCode.text, plantID, identifyID);
+                    },
+                    child: Text(
+                      I18n.of(context).search,
+                      style: const TextStyle(
                           color: Colors.white,
                           fontSize: 16,
                           fontWeight: FontWeight.bold),
@@ -90,20 +114,25 @@ class _BarCodeState extends State<BarCodePage> {
                 ),
               ),
               Expanded(
-                flex: 1,
-                child: ElevatedButton(
-                    style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.all(Colors.blue),
-                      shape: MaterialStateProperty.all(RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(25),
-                      )),
-                    ),
-                    onPressed: () async {
-                      getQrcodeState().then((value) =>
-                          setState((() => {txtBarCode.text = value})));
-                    },
-                    child: const Icon(Icons.camera_alt_sharp)),
-              ),
+                  flex: 1,
+                  // ignore: sized_box_for_whitespace
+                  child: Container(
+                    height: 30,
+                    child: ElevatedButton(
+                        style: ButtonStyle(
+                          padding: MaterialStateProperty.all(EdgeInsets.zero),
+                          backgroundColor:
+                              MaterialStateProperty.all(Colors.blue),
+                          shape:
+                              MaterialStateProperty.all(RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(25),
+                          )),
+                        ),
+                        onPressed: () async {
+                          scanBarcodeNormal();
+                        },
+                        child: const Icon(Icons.camera_alt_sharp)),
+                  )),
               Container(
                 margin: const EdgeInsets.only(right: 10.0),
               ),
@@ -127,7 +156,7 @@ class _BarCodeState extends State<BarCodePage> {
                   child: Container(
                     margin: const EdgeInsets.symmetric(horizontal: 5),
                     alignment: Alignment.centerLeft,
-                    child: const Text('data'),
+                    child: Text(labBarCode),
                   )),
             ],
           ),
@@ -150,7 +179,7 @@ class _BarCodeState extends State<BarCodePage> {
                   child: Container(
                     margin: const EdgeInsets.symmetric(horizontal: 5),
                     alignment: Alignment.centerLeft,
-                    child: const Text('data'),
+                    child: Text(labPartNo),
                   )),
             ],
           ),
@@ -173,7 +202,7 @@ class _BarCodeState extends State<BarCodePage> {
                   child: Container(
                     margin: const EdgeInsets.symmetric(horizontal: 5),
                     alignment: Alignment.centerLeft,
-                    child: const Text('data'),
+                    child: Text(labPartName),
                   )),
             ],
           ),
@@ -196,7 +225,7 @@ class _BarCodeState extends State<BarCodePage> {
                   child: Container(
                     margin: const EdgeInsets.symmetric(horizontal: 5),
                     alignment: Alignment.centerLeft,
-                    child: const Text('data'),
+                    child: Text(labStatus),
                   )),
             ],
           ),
@@ -219,7 +248,7 @@ class _BarCodeState extends State<BarCodePage> {
                   child: Container(
                     margin: const EdgeInsets.symmetric(horizontal: 5),
                     alignment: Alignment.centerLeft,
-                    child: const Text('data'),
+                    child: Text(labStation),
                   )),
             ],
           ),
@@ -242,7 +271,7 @@ class _BarCodeState extends State<BarCodePage> {
                   child: Container(
                     margin: const EdgeInsets.symmetric(horizontal: 5),
                     alignment: Alignment.centerLeft,
-                    child: const Text('data'),
+                    child: Text(labProductDt),
                   )),
             ],
           ),
@@ -265,7 +294,7 @@ class _BarCodeState extends State<BarCodePage> {
                   child: Container(
                     margin: const EdgeInsets.symmetric(horizontal: 5),
                     alignment: Alignment.centerLeft,
-                    child: const Text('data'),
+                    child: Text(labCreateDt),
                   )),
             ],
           ),
@@ -274,19 +303,49 @@ class _BarCodeState extends State<BarCodePage> {
     );
   }
 
-  //扫描二维码
-  static Future<String> getQrcodeState() async {
+  Future<void> scanBarcodeNormal() async {
+    String barcodeScanRes;
+    // Platform messages may fail, so we use a try/catch PlatformException.
     try {
-      const ScanOptions options = ScanOptions(
-        strings: {
-          'cancel': '取消',
-          'flash_on': '开启闪光灯',
-          'flash_off': '关闭闪光灯',
-        },
-      );
-      final ScanResult result = await BarcodeScanner.scan(options: options);
-      return result.rawContent;
-    } catch (e) {}
-    return '';
+      barcodeScanRes = await FlutterBarcodeScanner.scanBarcode(
+          '#ff6666', 'Cancel', true, ScanMode.BARCODE);
+      print(barcodeScanRes);
+    } on PlatformException {
+      barcodeScanRes = 'Failed to get platform version.';
+    }
+    if (!mounted) return;
+
+    setState(() {
+      this.txtBarCode.text = barcodeScanRes;
+    });
+  }
+
+  Future<void> getData(
+      String barCode, String plantId, String identifyID) async {
+    Map<String, dynamic> params = {
+      'barcode': barCode,
+      'plantID': plantId,
+      'identifyID': identifyID
+    };
+    await sendRequest(getBarcodeInfo, Method.get, params).then((value) {
+      print(value);
+      if (!mounted) return;
+
+      setState(() {
+        value.forEach((el) => {
+              labBarCode = el['BARCODE'],
+              labPartNo = el['PART_NO'],
+              labPartName = el['PART_NAME'],
+              labStatus = el['STATUSNAME'],
+              labStation = el['LOCATION'],
+              labProductDt = el['GENERATION_TIME'],
+              labCreateDt = el['CREATE_DATE']
+            });
+      });
+    }).catchError((error) {
+      if (error) {
+        print(error.toString());
+      }
+    });
   }
 }

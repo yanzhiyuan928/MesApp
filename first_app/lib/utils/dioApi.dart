@@ -5,9 +5,15 @@ import 'dart:async';
 import 'dart:io';
 
 enum Method { get, post }
-const baseURL = "http://172.28.16.40:90/api/"; //域名地址
+const baseURL = "http://10.141.192.119:90/api/"; //域名地址
 const logIn = baseURL + "System/PostLoginIn";
 const getPlant = baseURL + "System/GetPlant";
+
+const getBarcodeInfo = baseURL + "Production/GetBarcodeInfo";
+const getProductionLog = baseURL + "Production/GetProductionLog";
+const getAssemblyPartTrace = baseURL + "Production/GetAssemblyPartTree";
+const getRawMaterial = baseURL + "Production/GetRawMaterial";
+const getDefectInfo = baseURL + "Quality/GetDefectInfo";
 
 Future sendRequest(String url, Method method, Map<String, dynamic> map) async {
   try {
@@ -31,8 +37,8 @@ Future sendRequest(String url, Method method, Map<String, dynamic> map) async {
       case Method.post:
         // ignore: avoid_print
         print('开始使用post');
-        FormData formData = FormData.fromMap(map);
-        response = await dio.post(url, data: formData);
+        //FormData formData = FormData.fromMap(map);
+        response = await dio.post(url, data: map);
         break;
     }
     // if (response.data .toString() != 'null') {

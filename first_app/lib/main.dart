@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_const_constructors, unnecessary_this, duplicate_ignore, avoid_print, unused_import
+// ignore_for_file: avoid_print, unused_field
 
 import 'package:first_app/IndexPage.dart';
 import 'package:first_app/route/routes.dart';
@@ -28,26 +28,32 @@ class MyApp extends StatelessWidget {
       routes: routes,
       theme: ThemeData(primarySwatch: Colors.blue),
       home: const HomePage(),
-      localeResolutionCallback:
-          // ignore: body_might_complete_normally_nullable
-          (Locale? _locale, Iterable<Locale> supportedLocales) {
-        return Locale('zh');
-      },
       //中英文
-      // ignore: prefer_const_literals_to_create_immutables
       localizationsDelegates: [
         // 指定本地化的字符串和一些其他的值
         GlobalMaterialLocalizations.delegate,
         //指定默认的文本排列方向, 由左到右或由右到左
         GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+        //注册定义的语言包
         I18nDelegate()
       ],
-      // ignore: prefer_const_literals_to_create_immutables
-      supportedLocales: [
-        //此处
-        const Locale('zh', 'CH'),
-        const Locale('en', 'US'),
+      // 语种定义
+      supportedLocales: const [
+        Locale('zh', 'CN'),
+        Locale('en', 'US'),
       ],
+      //默认语言
+      localeResolutionCallback:
+          (Locale? _locale, Iterable<Locale> supportedLocales) {
+        var result = supportedLocales
+            .where((element) => element.languageCode == _locale!.languageCode);
+        if (result.isNotEmpty) {
+          return _locale;
+        }
+        return const Locale('zh');
+      },
+      locale: const Locale('en'),
     );
   }
 }
@@ -61,7 +67,9 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  // ignore: non_constant_identifier_names
   final txt_uid = TextEditingController();
+  // ignore: non_constant_identifier_names
   final txt_pwd = TextEditingController();
   bool showPhoneClear = false;
   bool showPwdClear = false;
@@ -82,7 +90,7 @@ class _HomePageState extends State<HomePage> {
     await sendRequest(getPlant, Method.get, params).then((value) {
       print(value);
       value.forEach((el) => {
-            this.plantList.add(DropdownMenuItem(
+            plantList.add(DropdownMenuItem(
                 child: Text(el['PlantName']), value: el['PlantID']))
           });
     }).catchError((error) {
@@ -118,7 +126,7 @@ class _HomePageState extends State<HomePage> {
         //   backgroundColor: Colors.pink,
         // ),
         body: Container(
-      color: Color.fromARGB(255, 228, 240, 252),
+      color: const Color.fromARGB(255, 228, 240, 252),
       child: Stack(
         children: [
           Positioned(
@@ -152,8 +160,8 @@ class _HomePageState extends State<HomePage> {
                     margin: const EdgeInsets.only(top: 70),
                     child: Text(
                       I18n.of(context).login,
-                      style:
-                          TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                      style: const TextStyle(
+                          fontSize: 20, fontWeight: FontWeight.bold),
                     ),
                   ),
                   Container(
@@ -161,7 +169,7 @@ class _HomePageState extends State<HomePage> {
                     child: Switch(
                       // ignore: unnecessary_this
                       onChanged: (value) => {
-                        this.flag = value,
+                        flag = value,
                         refresh(),
                       },
                       // ignore: unnecessary_this
@@ -322,9 +330,6 @@ class _HomePageState extends State<HomePage> {
                         var tmp1 = await kvStore.getString('uid');
                         print(tmp1);
 
-                        print("登录");
-                        print('手机号：${txt_uid.text}  密码：${txt_pwd.text}');
-
                         Navigator.push(
                             context,
                             MaterialPageRoute(
@@ -332,7 +337,7 @@ class _HomePageState extends State<HomePage> {
                       },
                       child: Text(
                         I18n.of(context).login,
-                        style: TextStyle(
+                        style: const TextStyle(
                             color: Colors.white,
                             fontSize: 16,
                             fontWeight: FontWeight.bold),

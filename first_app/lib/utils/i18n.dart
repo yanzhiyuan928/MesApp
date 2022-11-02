@@ -18,11 +18,16 @@ class I18n {
       "login": "Login",
       "login_uid": "Please enter account number ",
       "login_pwd": "Please enter password number",
-      'queryBarCode': 'query BarCode',
-      'machineRecords': 'machine Records',
-      'suspected': 'suspected',
-      'assemblyParts': 'assembly Parts',
-      'rawMaterial': 'raw Material',
+      'queryBarCode': 'Query BarCode',
+      'machineRecords': 'Production Log Records',
+      'suspected': 'Defects Records',
+      'assemblyParts': 'Assembly Part Trace',
+      'rawMaterial': 'Raw Material',
+      'barCode': 'input barCode',
+      'search': 'Search',
+      'logOut': 'logOut',
+      'switchLanage': 'Switch Lanage',
+      'setting': 'setting',
     },
     "zh": {
       "selectPlant": "<请选择工厂>",
@@ -34,6 +39,11 @@ class I18n {
       'suspected': '可疑品',
       'assemblyParts': '装配件',
       'rawMaterial': '原材料',
+      'barCode': '请输入条码',
+      'search': '查询',
+      'logOut': '登出',
+      'switchLanage': '切换语言',
+      'setting': '设置',
     }
   };
 
@@ -73,6 +83,26 @@ class I18n {
 
   String get rawMaterial {
     return _localizedValues[locale.languageCode]!["rawMaterial"] ?? "";
+  }
+
+  String get barCode {
+    return _localizedValues[locale.languageCode]!["barCode"] ?? "";
+  }
+
+  String get search {
+    return _localizedValues[locale.languageCode]!["search"] ?? "";
+  }
+
+  String get logOut {
+    return _localizedValues[locale.languageCode]!["logOut"] ?? "";
+  }
+
+  String get switchLanage {
+    return _localizedValues[locale.languageCode]!["switchLanage"] ?? "";
+  }
+
+  String get setting {
+    return _localizedValues[locale.languageCode]!["setting"] ?? "";
   }
 }
 

@@ -38,7 +38,10 @@ dependencies:
   dio: ^4.0.6
   shared_preferences: ^2.0.13
   date_format: ^1.0.8
-  barcode_scan: ^3.0.1
+  # 扫条码
+  flutter_barcode_scanner: ^2.0.0
+  # MD5 加密
+  crypto: ^3.0.2
 
 dev_dependencies:
   flutter_test:

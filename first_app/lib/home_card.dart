@@ -53,7 +53,8 @@ class HomeCard extends StatelessWidget {
               print("click --" + text.toString() + "-- home 名称");
               //print("click --" + functionCode.toString() + "-- 页面code");
               //kvStore.save("functionCode", functionCode);
-              Navigator.pushNamed(context, this.routeName);
+              Navigator.pushNamed(context, this.routeName,
+                  arguments: text.toString());
             },
           ),
         ),
