@@ -1,4 +1,6 @@
 // ignore: file_names
+// ignore_for_file: unused_element, avoid_print
+
 import 'package:first_app/utils/i18n.dart';
 import 'package:flutter/material.dart';
 import 'home_card.dart';
@@ -33,8 +35,20 @@ class _IndexPageState extends State<IndexPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Menu'),
+        //automaticallyImplyLeading: false,
+        leading: Builder(
+          builder: (context) {
+            return IconButton(
+              icon: const Icon(Icons.menu),
+              onPressed: () {
+                Scaffold.of(context).openDrawer();
+              },
+            );
+          },
+        ),
       ),
       body: _buildBody(),
+      drawer: _drawer,
     );
   }
 
@@ -44,27 +58,74 @@ class _IndexPageState extends State<IndexPage> {
       child: ListView(
         children: <Widget>[
           HomeCard(
-            text: I18n.of(context).queryBarCode,
-            routeName: '/queryBarCode',
-          ),
+              text: I18n.of(context).queryBarCode, routeName: '/barCodeInfo'),
           HomeCard(
             text: I18n.of(context).machineRecords,
-            routeName: '',
+            routeName: '/productionLog',
           ),
           HomeCard(
             text: I18n.of(context).suspected,
-            routeName: '',
+            routeName: '/defectInfo',
           ),
           HomeCard(
             text: I18n.of(context).assemblyParts,
-            routeName: '',
+            routeName: '/assemblyPartTrack',
           ),
           HomeCard(
             text: I18n.of(context).rawMaterial,
-            routeName: '',
+            routeName: '/rawMaterial',
           )
         ],
       ),
     );
   }
+
+  get _drawer => Drawer(
+        ///edit start
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: [
+            // ignore: prefer_const_constructors
+            DrawerHeader(
+              decoration: const BoxDecoration(
+                color: Colors.lightBlueAccent,
+              ),
+              child: const Center(
+                child: SizedBox(
+                  width: 60.0,
+                  height: 60.0,
+                  child: CircleAvatar(
+                    child: Text('Admin'),
+                  ),
+                ),
+              ),
+            ),
+            ListTile(
+              leading: const Icon(Icons.settings),
+              title: Text(I18n.of(context).setting),
+            ),
+            ListTile(
+              leading: const Icon(Icons.language),
+              title: Text(I18n.of(context).switchLanage),
+              onTap: () {
+                print('Switch Lanage');
+                // ignore: unused_local_variable
+                var tmpLanage = Localizations.localeOf(context);
+                print(tmpLanage);
+                //localeResolutionCallback
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.exit_to_app),
+              title: Text(I18n.of(context).logOut),
+              onTap: () {
+                Navigator.of(context).pushNamedAndRemoveUntil(
+                    "/login", ModalRoute.withName("/login"));
+              },
+            )
+          ],
+        ),
+
+        ///edit end
+      );
 }
