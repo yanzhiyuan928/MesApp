@@ -32,6 +32,9 @@ class _BarCodeState extends State<BarCodePage> {
   //该回调只会调用一次，当屏幕首次渲染第一帧的时候调用
   void initState() {
     super.initState();
+    if (mounted) {
+      setState(() {});
+    }
   }
 
   @override
@@ -70,7 +73,7 @@ class _BarCodeState extends State<BarCodePage> {
                     decoration: InputDecoration(
                       prefixIcon: const Icon(Icons.fullscreen_sharp,
                           size: 25, color: Colors.blue),
-                      hintText: I18n.of(context).barCode,
+                      hintText: I18n.of(context).inputBarCode,
                       suffixIcon: Visibility(
                         visible: showClear,
                         child: GestureDetector(
@@ -145,9 +148,9 @@ class _BarCodeState extends State<BarCodePage> {
                 flex: 1,
                 child: Container(
                   margin: const EdgeInsets.symmetric(horizontal: 10),
-                  child: const Text(
-                    '条码：',
-                    style: TextStyle(fontWeight: FontWeight.bold),
+                  child: Text(
+                    I18n.of(context).barCode,
+                    style: const TextStyle(fontWeight: FontWeight.bold),
                   ),
                 ),
               ),
@@ -168,9 +171,9 @@ class _BarCodeState extends State<BarCodePage> {
                 flex: 1,
                 child: Container(
                   margin: const EdgeInsets.symmetric(horizontal: 10),
-                  child: const Text(
-                    '零件号：',
-                    style: TextStyle(fontWeight: FontWeight.bold),
+                  child: Text(
+                    I18n.of(context).partNo,
+                    style: const TextStyle(fontWeight: FontWeight.bold),
                   ),
                 ),
               ),
@@ -191,9 +194,9 @@ class _BarCodeState extends State<BarCodePage> {
                 flex: 1,
                 child: Container(
                   margin: const EdgeInsets.symmetric(horizontal: 10),
-                  child: const Text(
-                    '零件名称：',
-                    style: TextStyle(fontWeight: FontWeight.bold),
+                  child: Text(
+                    I18n.of(context).partName,
+                    style: const TextStyle(fontWeight: FontWeight.bold),
                   ),
                 ),
               ),
@@ -214,9 +217,9 @@ class _BarCodeState extends State<BarCodePage> {
                 flex: 1,
                 child: Container(
                   margin: const EdgeInsets.symmetric(horizontal: 10),
-                  child: const Text(
-                    '状态：',
-                    style: TextStyle(fontWeight: FontWeight.bold),
+                  child: Text(
+                    I18n.of(context).state,
+                    style: const TextStyle(fontWeight: FontWeight.bold),
                   ),
                 ),
               ),
@@ -237,9 +240,9 @@ class _BarCodeState extends State<BarCodePage> {
                 flex: 1,
                 child: Container(
                   margin: const EdgeInsets.symmetric(horizontal: 10),
-                  child: const Text(
-                    '工位：',
-                    style: TextStyle(fontWeight: FontWeight.bold),
+                  child: Text(
+                    I18n.of(context).location,
+                    style: const TextStyle(fontWeight: FontWeight.bold),
                   ),
                 ),
               ),
@@ -260,9 +263,9 @@ class _BarCodeState extends State<BarCodePage> {
                 flex: 1,
                 child: Container(
                   margin: const EdgeInsets.symmetric(horizontal: 10),
-                  child: const Text(
-                    '生产时间：',
-                    style: TextStyle(fontWeight: FontWeight.bold),
+                  child: Text(
+                    I18n.of(context).generationDt,
+                    style: const TextStyle(fontWeight: FontWeight.bold),
                   ),
                 ),
               ),
@@ -283,9 +286,9 @@ class _BarCodeState extends State<BarCodePage> {
                 flex: 1,
                 child: Container(
                   margin: const EdgeInsets.symmetric(horizontal: 10),
-                  child: const Text(
-                    '创建时间：',
-                    style: TextStyle(fontWeight: FontWeight.bold),
+                  child: Text(
+                    I18n.of(context).createDt,
+                    style: const TextStyle(fontWeight: FontWeight.bold),
                   ),
                 ),
               ),
@@ -316,7 +319,7 @@ class _BarCodeState extends State<BarCodePage> {
     if (!mounted) return;
 
     setState(() {
-      this.txtBarCode.text = barcodeScanRes;
+      txtBarCode.text = barcodeScanRes;
     });
   }
 

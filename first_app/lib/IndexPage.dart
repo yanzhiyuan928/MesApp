@@ -2,6 +2,7 @@
 // ignore_for_file: unused_element, avoid_print
 
 import 'package:first_app/utils/i18n.dart';
+import 'package:first_app/utils/kvStore.dart';
 import 'package:flutter/material.dart';
 import 'home_card.dart';
 
@@ -13,6 +14,8 @@ class IndexPage extends StatefulWidget {
 }
 
 class _IndexPageState extends State<IndexPage> {
+  late var userId = '';
+
   @override
   void initState() {
     super.initState();
@@ -20,6 +23,7 @@ class _IndexPageState extends State<IndexPage> {
   }
 
   Future<void> load() async {
+    userId = await kvStore.getString('userId') as String;
     await refresh();
   }
 
@@ -90,12 +94,12 @@ class _IndexPageState extends State<IndexPage> {
               decoration: const BoxDecoration(
                 color: Colors.lightBlueAccent,
               ),
-              child: const Center(
+              child: Center(
                 child: SizedBox(
                   width: 60.0,
                   height: 60.0,
                   child: CircleAvatar(
-                    child: Text('Admin'),
+                    child: Text(userId),
                   ),
                 ),
               ),
@@ -118,8 +122,10 @@ class _IndexPageState extends State<IndexPage> {
             ListTile(
               leading: const Icon(Icons.exit_to_app),
               title: Text(I18n.of(context).logOut),
-              onTap: () {
-                Navigator.of(context).pushNamedAndRemoveUntil(
+              onTap: () async {
+                kvStore.remove('plantID');
+                kvStore.remove('identifyID');
+                await Navigator.of(context).pushNamedAndRemoveUntil(
                     "/login", ModalRoute.withName("/login"));
               },
             )

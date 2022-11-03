@@ -67,7 +67,7 @@ class _rawMaterialState extends State<rawMaterialPage> {
                     decoration: InputDecoration(
                       prefixIcon: const Icon(Icons.fullscreen_sharp,
                           size: 25, color: Colors.blue),
-                      hintText: I18n.of(context).barCode,
+                      hintText: I18n.of(context).inputBarCode,
                       suffixIcon: Visibility(
                         visible: showClear,
                         child: GestureDetector(

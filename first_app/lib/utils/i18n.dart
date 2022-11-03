@@ -23,11 +23,18 @@ class I18n {
       'suspected': 'Defects Records',
       'assemblyParts': 'Assembly Part Trace',
       'rawMaterial': 'Raw Material',
-      'barCode': 'input barCode',
+      'inputBarCode': 'input barCode',
       'search': 'Search',
       'logOut': 'logOut',
       'switchLanage': 'Switch Lanage',
       'setting': 'setting',
+      'barCode': 'BarCode',
+      'partNo': 'Part No',
+      'partName': 'Part Name',
+      'state': 'Status',
+      'location': 'Location',
+      'generationDt': 'Production Time',
+      'createDt': 'Create Time',
     },
     "zh": {
       "selectPlant": "<请选择工厂>",
@@ -39,11 +46,18 @@ class I18n {
       'suspected': '可疑品',
       'assemblyParts': '装配件',
       'rawMaterial': '原材料',
-      'barCode': '请输入条码',
+      'inputBarCode': '请输入条码',
       'search': '查询',
       'logOut': '登出',
       'switchLanage': '切换语言',
       'setting': '设置',
+      'barCode': '条码',
+      'partNo': '零件号',
+      'partName': '零件名称',
+      'state': '状态',
+      'location': '工位',
+      'generationDt': '生产时间',
+      'createDt': '生产时间',
     }
   };
 
@@ -85,8 +99,8 @@ class I18n {
     return _localizedValues[locale.languageCode]!["rawMaterial"] ?? "";
   }
 
-  String get barCode {
-    return _localizedValues[locale.languageCode]!["barCode"] ?? "";
+  String get inputBarCode {
+    return _localizedValues[locale.languageCode]!["inputBarCode"] ?? "";
   }
 
   String get search {
@@ -103,6 +117,34 @@ class I18n {
 
   String get setting {
     return _localizedValues[locale.languageCode]!["setting"] ?? "";
+  }
+
+  String get barCode {
+    return _localizedValues[locale.languageCode]!["barCode"] ?? "";
+  }
+
+  String get partNo {
+    return _localizedValues[locale.languageCode]!["partNo"] ?? "";
+  }
+
+  String get partName {
+    return _localizedValues[locale.languageCode]!["partName"] ?? "";
+  }
+
+  String get state {
+    return _localizedValues[locale.languageCode]!["state"] ?? "";
+  }
+
+  String get location {
+    return _localizedValues[locale.languageCode]!["location"] ?? "";
+  }
+
+  String get generationDt {
+    return _localizedValues[locale.languageCode]!["generationDt"] ?? "";
+  }
+
+  String get createDt {
+    return _localizedValues[locale.languageCode]!["createDt"] ?? "";
   }
 }
 

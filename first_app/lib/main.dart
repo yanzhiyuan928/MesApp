@@ -1,5 +1,8 @@
 // ignore_for_file: avoid_print, unused_field
 
+import 'dart:convert';
+
+import 'package:crypto/crypto.dart';
 import 'package:first_app/IndexPage.dart';
 import 'package:first_app/route/routes.dart';
 import 'package:first_app/utils/dioApi.dart';
@@ -10,7 +13,7 @@ import 'package:flutter/material.dart';
 //import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
-void main() {
+Future<void> main() async {
   runApp(const MyApp());
 }
 
@@ -20,10 +23,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      //打开为展示线框看布局
-      // showSemanticsDebugger: true,
-      //Android任务管理器的标题
-      title: 'Flutter Demo',
+      title: 'Pisces',
       initialRoute: '/',
       routes: routes,
       theme: ThemeData(primarySwatch: Colors.blue),
@@ -67,12 +67,13 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  // ignore: non_constant_identifier_names
-  final txt_uid = TextEditingController();
-  // ignore: non_constant_identifier_names
-  final txt_pwd = TextEditingController();
+  final txtUid = TextEditingController();
+  final txtPwd = TextEditingController();
   bool showPhoneClear = false;
   bool showPwdClear = false;
+  bool isSuccess = false;
+  bool isAutoLogin = false;
+
   final FocusNode phoneFocusNode = FocusNode();
   final FocusNode pwdFocusNode = FocusNode();
 
@@ -81,6 +82,12 @@ class _HomePageState extends State<HomePage> {
 
   Future<void> load() async {
     await kvStore.init();
+    var identifyId = await kvStore.getString('identifyID');
+    print(identifyId);
+    if (identifyId != null) {
+      isAutoLogin = true;
+    }
+
     await handlePlant();
     await refresh();
   }
@@ -106,18 +113,75 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
+  //登录
+  Future<bool> postlogIn() async {
+    var plantID = await kvStore.getString('plantID') as String;
+    var pwdWord = generateMd5(txtPwd.text);
+    Map<String, dynamic> params = {
+      'UserName': 'admin',
+      'Password': pwdWord,
+      'PlantID': plantID,
+    };
+    await sendRequest(logIn, Method.post, params).then((value) {
+      print(value);
+      if (value.length == 0 || value[0]['ERROR'] != null) {
+        kvStore.remove('identifyID');
+        print('登录失败');
+      } else {
+        kvStore.save('userId', txtUid.text);
+        kvStore.save('identifyID', value[0]['IdentifyID']);
+        isSuccess = true;
+      }
+    }).catchError((error) {
+      isSuccess = false;
+      kvStore.remove('identifyID');
+      if (error) {
+        print(error.toString());
+      }
+    });
+    return isSuccess;
+  }
+
+  String generateMd5(String data) {
+    var content = const Utf8Encoder().convert(data);
+    return md5.convert(content).toString().replaceAll('-', '');
+  }
+
   @override
   //生命周期函数
   //该回调只会调用一次，当屏幕首次渲染第一帧的时候调用
   void initState() {
     super.initState();
     load();
+    // WidgetsBinding.instance!.addPostFrameCallback(
+    //   (timeStamp) => {
+    //     if (isAutoLogin)
+    //       {
+    //         Navigator.push(context,
+    //             MaterialPageRoute(builder: (context) => const IndexPage()))
+    //       }
+    //   },
+    // );
   }
 
   @override
   //生命周期函数
   //构建该widget表示的UI元素
   Widget build(BuildContext context) {
+    if (isAutoLogin) {
+      // Future.delayed(Duration.zero, () {
+      //   Navigator.push(context,
+      //       MaterialPageRoute(builder: (context) => const IndexPage()));
+      // });
+      Future.delayed(const Duration(milliseconds: 500), () {
+        Navigator.of(context).pushAndRemoveUntil(
+            MaterialPageRoute(builder: (context) => const IndexPage()),
+            (route) => false);
+      });
+
+      // Navigator.of(context)
+      //     .pushNamedAndRemoveUntil("/home", ModalRoute.withName("/home"));
+    }
     return Scaffold(
         //避免键盘弹起遮挡输入框报错，默认为true
         // resizeToAvoidBottomInset: false,
@@ -164,25 +228,26 @@ class _HomePageState extends State<HomePage> {
                           fontSize: 20, fontWeight: FontWeight.bold),
                     ),
                   ),
-                  Container(
-                    alignment: Alignment.centerRight,
-                    child: Switch(
-                      // ignore: unnecessary_this
-                      onChanged: (value) => {
-                        flag = value,
-                        refresh(),
-                      },
-                      // ignore: unnecessary_this
-                      value: this.flag,
-                    ),
-                  ),
+                  // Container(
+                  //   alignment: Alignment.centerRight,
+                  //   child: Switch(
+                  //     // ignore: unnecessary_this
+                  //     onChanged: (value) => {
+                  //       flag = value,
+                  //       refresh(),
+                  //     },
+                  //     // ignore: unnecessary_this
+                  //     value: this.flag,
+                  //   ),
+                  // ),
                   //工厂下拉
                   Container(
                     margin: const EdgeInsets.symmetric(
                         horizontal: 15, vertical: 30),
                     child: DropdownButtonFormField(
                       items: plantList,
-                      onChanged: (value) => {print(value)},
+                      onChanged: (value) async =>
+                          {await kvStore.save('plantID', value)},
                       //装饰器
                       decoration: InputDecoration(
                         //手机号图标
@@ -211,7 +276,7 @@ class _HomePageState extends State<HomePage> {
                       //关联焦点变量，处理输入框失去焦点
                       focusNode: phoneFocusNode,
                       //关联输入框变量
-                      controller: txt_uid,
+                      controller: txtUid,
                       //键盘类型
                       keyboardType: TextInputType.text,
                       //输入校验
@@ -259,7 +324,7 @@ class _HomePageState extends State<HomePage> {
                           visible: showPhoneClear,
                           child: GestureDetector(
                             onTap: () {
-                              txt_uid.clear();
+                              txtUid.clear();
                               print('jj');
                             },
                             //清除按钮
@@ -274,7 +339,7 @@ class _HomePageState extends State<HomePage> {
                     margin: const EdgeInsets.symmetric(horizontal: 15),
                     child: TextField(
                       focusNode: pwdFocusNode,
-                      controller: txt_pwd,
+                      controller: txtPwd,
                       maxLength: 32,
                       obscureText: true,
                       //这个键盘兼容密码密码输入字符
@@ -299,7 +364,7 @@ class _HomePageState extends State<HomePage> {
                           visible: showPwdClear,
                           child: GestureDetector(
                             onTap: () {
-                              txt_pwd.clear();
+                              txtPwd.clear();
                               print('jj');
                             },
                             child: const Icon(Icons.clear),
@@ -323,13 +388,17 @@ class _HomePageState extends State<HomePage> {
                         // MaterialStateProperty.all(const EdgeInsets.all(25)),
                       ),
                       onPressed: () async {
-                        kvStore.save('uid', txt_uid.text);
+                        kvStore.save('uid', txtUid.text);
                         var tmp = await kvStore.getString('uid');
                         print(tmp);
                         kvStore.remove('uid');
                         var tmp1 = await kvStore.getString('uid');
                         print(tmp1);
 
+                        var result = await postlogIn();
+                        if (!result) {
+                          return;
+                        }
                         Navigator.push(
                             context,
                             MaterialPageRoute(
