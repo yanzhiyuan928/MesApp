@@ -18,6 +18,7 @@ class I18n {
       "login": "Login",
       "login_uid": "Please enter account number ",
       "login_pwd": "Please enter password number",
+      "menu": "Menu List",
       'queryBarCode': 'Query BarCode',
       'machineRecords': 'Production Log Records',
       'suspected': 'Defects Records',
@@ -25,8 +26,9 @@ class I18n {
       'rawMaterial': 'Raw Material',
       'inputBarCode': 'input barCode',
       'search': 'Search',
-      'logOut': 'logOut',
-      'switchLanage': 'Switch Lanage',
+      'logOut': 'LogOut',
+      'theme': 'Theme',
+      'switchLanage': 'Lanage',
       'setting': 'setting',
       'barCode': 'BarCode',
       'partNo': 'Part No',
@@ -41,6 +43,7 @@ class I18n {
       "login": "登录",
       "login_uid": "请输入账号",
       "login_pwd": "请输入密码",
+      "menu": "主菜单",
       'queryBarCode': '条码查询',
       'machineRecords': '加工记录',
       'suspected': '可疑品',
@@ -49,6 +52,7 @@ class I18n {
       'inputBarCode': '请输入条码',
       'search': '查询',
       'logOut': '登出',
+      'theme': '主题',
       'switchLanage': '切换语言',
       'setting': '设置',
       'barCode': '条码',
@@ -62,89 +66,97 @@ class I18n {
   };
 
   String get selectPlant {
-    return _localizedValues[locale.languageCode]!["selectPlant"] ?? "";
+    return _localizedValues[locale.languageCode]!["selectPlant"] as String;
   }
 
   String get login {
-    return _localizedValues[locale.languageCode]!["login"] ?? "";
+    return _localizedValues[locale.languageCode]!["login"] as String;
   }
 
   // ignore: non_constant_identifier_names
   String get login_uid {
-    return _localizedValues[locale.languageCode]!["login_uid"] ?? "";
+    return _localizedValues[locale.languageCode]!["login_uid"] as String;
   }
 
   // ignore: non_constant_identifier_names
   String get login_pwd {
-    return _localizedValues[locale.languageCode]!["login_pwd"] ?? "";
+    return _localizedValues[locale.languageCode]!["login_pwd"] as String;
+  }
+
+  String get menu {
+    return _localizedValues[locale.languageCode]!["menu"] as String;
   }
 
   String get queryBarCode {
-    return _localizedValues[locale.languageCode]!["queryBarCode"] ?? "";
+    return _localizedValues[locale.languageCode]!["queryBarCode"] as String;
   }
 
   String get machineRecords {
-    return _localizedValues[locale.languageCode]!["machineRecords"] ?? "";
+    return _localizedValues[locale.languageCode]!["machineRecords"] as String;
   }
 
   String get suspected {
-    return _localizedValues[locale.languageCode]!["suspected"] ?? "";
+    return _localizedValues[locale.languageCode]!["suspected"] as String;
   }
 
   String get assemblyParts {
-    return _localizedValues[locale.languageCode]!["assemblyParts"] ?? "";
+    return _localizedValues[locale.languageCode]!["assemblyParts"] as String;
   }
 
   String get rawMaterial {
-    return _localizedValues[locale.languageCode]!["rawMaterial"] ?? "";
+    return _localizedValues[locale.languageCode]!["rawMaterial"] as String;
   }
 
   String get inputBarCode {
-    return _localizedValues[locale.languageCode]!["inputBarCode"] ?? "";
+    return _localizedValues[locale.languageCode]!["inputBarCode"] as String;
   }
 
   String get search {
-    return _localizedValues[locale.languageCode]!["search"] ?? "";
+    return _localizedValues[locale.languageCode]!["search"] as String;
   }
 
   String get logOut {
-    return _localizedValues[locale.languageCode]!["logOut"] ?? "";
+    return _localizedValues[locale.languageCode]!["logOut"] as String;
   }
 
   String get switchLanage {
-    return _localizedValues[locale.languageCode]!["switchLanage"] ?? "";
+    return _localizedValues[locale.languageCode]!["switchLanage"] as String;
+  }
+
+  String get theme {
+    return _localizedValues[locale.languageCode]!["theme"] as String;
   }
 
   String get setting {
-    return _localizedValues[locale.languageCode]!["setting"] ?? "";
+    return _localizedValues[locale.languageCode]!["setting"] as String;
   }
 
   String get barCode {
-    return _localizedValues[locale.languageCode]!["barCode"] ?? "";
+    return _localizedValues[locale.languageCode]!["barCode"] as String;
   }
 
   String get partNo {
-    return _localizedValues[locale.languageCode]!["partNo"] ?? "";
+    return _localizedValues[locale.languageCode]!["partNo"] as String;
   }
 
   String get partName {
-    return _localizedValues[locale.languageCode]!["partName"] ?? "";
+    return _localizedValues[locale.languageCode]!["partName"] as String;
   }
 
   String get state {
-    return _localizedValues[locale.languageCode]!["state"] ?? "";
+    return _localizedValues[locale.languageCode]!["state"] as String;
   }
 
   String get location {
-    return _localizedValues[locale.languageCode]!["location"] ?? "";
+    return _localizedValues[locale.languageCode]!["location"] as String;
   }
 
   String get generationDt {
-    return _localizedValues[locale.languageCode]!["generationDt"] ?? "";
+    return _localizedValues[locale.languageCode]!["generationDt"] as String;
   }
 
   String get createDt {
-    return _localizedValues[locale.languageCode]!["createDt"] ?? "";
+    return _localizedValues[locale.languageCode]!["createDt"] as String;
   }
 }
 

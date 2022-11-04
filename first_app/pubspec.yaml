@@ -42,6 +42,7 @@ dependencies:
   flutter_barcode_scanner: ^2.0.0
   # MD5 加密
   crypto: ^3.0.2
+  provider: ^6.0.4
 
 dev_dependencies:
   flutter_test:

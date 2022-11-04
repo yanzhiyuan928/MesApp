@@ -89,7 +89,7 @@ class _rawMaterialState extends State<rawMaterialPage> {
                   height: 30,
                   child: ElevatedButton(
                     style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.all(Colors.blue),
+                      //backgroundColor: MaterialStateProperty.all(Colors.blue),
                       shape: MaterialStateProperty.all(RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(25),
                       )),
@@ -118,8 +118,7 @@ class _rawMaterialState extends State<rawMaterialPage> {
                     child: ElevatedButton(
                         style: ButtonStyle(
                           padding: MaterialStateProperty.all(EdgeInsets.zero),
-                          backgroundColor:
-                              MaterialStateProperty.all(Colors.blue),
+                          //backgroundColor: MaterialStateProperty.all(Colors.blue),
                           shape:
                               MaterialStateProperty.all(RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(25),

@@ -1,10 +1,12 @@
 // ignore_for_file: avoid_print, unused_field
 
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:crypto/crypto.dart';
 import 'package:first_app/IndexPage.dart';
 import 'package:first_app/route/routes.dart';
+import 'package:first_app/utils/changeNotifier.dart';
 import 'package:first_app/utils/dioApi.dart';
 import 'package:first_app/utils/i18n.dart';
 import 'package:first_app/utils/kvStore.dart';
@@ -12,8 +14,12 @@ import 'package:first_app/utils/kvStore.dart';
 import 'package:flutter/material.dart';
 //import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:provider/provider.dart';
 
 Future<void> main() async {
+  await kvStore.init();
+  // String? lanage = await kvStore.getString('lanage');
+  // runApp(MyApp(lanage: lanage.toString()));
   runApp(const MyApp());
 }
 
@@ -22,39 +28,48 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Pisces',
-      initialRoute: '/',
-      routes: routes,
-      theme: ThemeData(primarySwatch: Colors.blue),
-      home: const HomePage(),
-      //中英文
-      localizationsDelegates: [
-        // 指定本地化的字符串和一些其他的值
-        GlobalMaterialLocalizations.delegate,
-        //指定默认的文本排列方向, 由左到右或由右到左
-        GlobalWidgetsLocalizations.delegate,
-        GlobalCupertinoLocalizations.delegate,
-        //注册定义的语言包
-        I18nDelegate()
-      ],
-      // 语种定义
-      supportedLocales: const [
-        Locale('zh', 'CN'),
-        Locale('en', 'US'),
-      ],
-      //默认语言
-      localeResolutionCallback:
-          (Locale? _locale, Iterable<Locale> supportedLocales) {
-        var result = supportedLocales
-            .where((element) => element.languageCode == _locale!.languageCode);
-        if (result.isNotEmpty) {
-          return _locale;
-        }
-        return const Locale('zh');
-      },
-      locale: const Locale('en'),
-    );
+    return MultiProvider(
+        providers: [
+          ChangeNotifierProvider.value(value: ThemeProvider()),
+          ChangeNotifierProvider.value(value: LanageProvider())
+        ],
+        child: Consumer2<ThemeProvider, LanageProvider>(
+          builder: (context, value, value2, child) {
+            return MaterialApp(
+              title: 'Pisces',
+              initialRoute: '/',
+              routes: routes,
+              theme: ThemeData(primarySwatch: value.getTheme),
+              home: const HomePage(),
+              //中英文
+              localizationsDelegates: [
+                // 指定本地化的字符串和一些其他的值
+                GlobalMaterialLocalizations.delegate,
+                //指定默认的文本排列方向, 由左到右或由右到左
+                GlobalWidgetsLocalizations.delegate,
+                GlobalCupertinoLocalizations.delegate,
+                //注册定义的语言包
+                I18nDelegate()
+              ],
+              // 语种定义
+              supportedLocales: const [
+                Locale('zh', 'CN'),
+                Locale('en', 'US'),
+              ],
+              //默认语言
+              localeResolutionCallback:
+                  (Locale? _locale, Iterable<Locale> supportedLocales) {
+                var result = supportedLocales.where(
+                    (element) => element.languageCode == _locale!.languageCode);
+                if (result.isNotEmpty) {
+                  return _locale;
+                }
+                return const Locale('zh');
+              },
+              locale: Locale(value2.getLanage),
+            );
+          },
+        ));
   }
 }
 
@@ -63,7 +78,7 @@ class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
 
   @override
-  State<HomePage> createState() => _HomePageState();
+  _HomePageState createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
@@ -81,7 +96,7 @@ class _HomePageState extends State<HomePage> {
   List<DropdownMenuItem<String>> plantList = [];
 
   Future<void> load() async {
-    await kvStore.init();
+    //await kvStore.init();
     var identifyId = await kvStore.getString('identifyID');
     print(identifyId);
     if (identifyId != null) {
@@ -153,15 +168,6 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
     load();
-    // WidgetsBinding.instance!.addPostFrameCallback(
-    //   (timeStamp) => {
-    //     if (isAutoLogin)
-    //       {
-    //         Navigator.push(context,
-    //             MaterialPageRoute(builder: (context) => const IndexPage()))
-    //       }
-    //   },
-    // );
   }
 
   @override
@@ -169,26 +175,13 @@ class _HomePageState extends State<HomePage> {
   //构建该widget表示的UI元素
   Widget build(BuildContext context) {
     if (isAutoLogin) {
-      // Future.delayed(Duration.zero, () {
-      //   Navigator.push(context,
-      //       MaterialPageRoute(builder: (context) => const IndexPage()));
-      // });
       Future.delayed(const Duration(milliseconds: 500), () {
         Navigator.of(context).pushAndRemoveUntil(
             MaterialPageRoute(builder: (context) => const IndexPage()),
             (route) => false);
       });
-
-      // Navigator.of(context)
-      //     .pushNamedAndRemoveUntil("/home", ModalRoute.withName("/home"));
     }
     return Scaffold(
-        //避免键盘弹起遮挡输入框报错，默认为true
-        // resizeToAvoidBottomInset: false,
-        // appBar: AppBar(
-        // title: const Text('sss'),
-        //   backgroundColor: Colors.pink,
-        // ),
         body: Container(
       color: const Color.fromARGB(255, 228, 240, 252),
       child: Stack(
@@ -379,7 +372,7 @@ class _HomePageState extends State<HomePage> {
                     height: 50,
                     child: ElevatedButton(
                       style: ButtonStyle(
-                        backgroundColor: MaterialStateProperty.all(Colors.blue),
+                        //backgroundColor: MaterialStateProperty.all(Colors.blue),
                         shape: MaterialStateProperty.all(RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(25),
                         )),

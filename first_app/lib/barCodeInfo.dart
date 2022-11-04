@@ -95,7 +95,7 @@ class _BarCodeState extends State<BarCodePage> {
                   height: 30,
                   child: ElevatedButton(
                     style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.all(Colors.blue),
+                      //backgroundColor: MaterialStateProperty.all(Colors.blue),
                       shape: MaterialStateProperty.all(RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(25),
                       )),
@@ -124,8 +124,7 @@ class _BarCodeState extends State<BarCodePage> {
                     child: ElevatedButton(
                         style: ButtonStyle(
                           padding: MaterialStateProperty.all(EdgeInsets.zero),
-                          backgroundColor:
-                              MaterialStateProperty.all(Colors.blue),
+                          //backgroundColor: MaterialStateProperty.all(Colors.blue),
                           shape:
                               MaterialStateProperty.all(RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(25),

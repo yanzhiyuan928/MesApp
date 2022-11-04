@@ -23,7 +23,7 @@ class HomeCard extends StatelessWidget {
               padding: EdgeInsets.symmetric(horizontal: 18.0),
               height: 60.0,
               decoration: BoxDecoration(
-                  color: Colors.blue,
+                  color: Theme.of(context).backgroundColor, // Colors.blue,
                   border: Border(
                       bottom: BorderSide(
                           color: Color.fromARGB(255, 179, 177, 177),

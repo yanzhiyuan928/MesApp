@@ -1,9 +1,12 @@
 // ignore: file_names
 // ignore_for_file: unused_element, avoid_print
 
+import 'package:first_app/utils/changeNotifier.dart';
 import 'package:first_app/utils/i18n.dart';
 import 'package:first_app/utils/kvStore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
+import 'package:provider/provider.dart';
 import 'home_card.dart';
 
 class IndexPage extends StatefulWidget {
@@ -15,6 +18,16 @@ class IndexPage extends StatefulWidget {
 
 class _IndexPageState extends State<IndexPage> {
   late var userId = '';
+  // 提供四套可选主题色
+  static const _themes = <MaterialColor>[
+    Colors.blue,
+    Colors.cyan,
+    Colors.teal,
+    Colors.green,
+    Colors.red,
+  ];
+
+  late MaterialColor _colorKey;
 
   @override
   void initState() {
@@ -38,7 +51,7 @@ class _IndexPageState extends State<IndexPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Menu'),
+        title: Text(I18n.of(context).menu),
         //automaticallyImplyLeading: false,
         leading: Builder(
           builder: (context) {
@@ -109,16 +122,60 @@ class _IndexPageState extends State<IndexPage> {
               title: Text(I18n.of(context).setting),
             ),
             ListTile(
-              leading: const Icon(Icons.language),
-              title: Text(I18n.of(context).switchLanage),
+              leading: const Icon(Icons.color_lens),
+              title: Text(I18n.of(context).theme),
+              // ignore: avoid_unnecessary_containers
+              subtitle: Container(
+                  child: Row(
+                children: _themes.map<Widget>((e) {
+                  return Expanded(
+                      flex: 1,
+                      child: Container(
+                        height: 20,
+                        color: e,
+                        margin: const EdgeInsets.symmetric(
+                            horizontal: 2, vertical: 2),
+                        child: IconButton(
+                          icon: Icon(
+                            const IconData(0),
+                            color: e,
+                          ),
+                          onPressed: () async => {
+                            //await kvStore.saveObject('theme', e),
+                            Provider.of<ThemeProvider>(context, listen: false)
+                                .setTheme(e)
+                          },
+                        ),
+                      ));
+                }).toList(),
+              )),
               onTap: () {
-                print('Switch Lanage');
-                // ignore: unused_local_variable
-                var tmpLanage = Localizations.localeOf(context);
+                var tmpLanage =
+                    Provider.of<ThemeProvider>(context, listen: false).getTheme;
                 print(tmpLanage);
-                //localeResolutionCallback
               },
             ),
+            ListTile(
+              leading: const Icon(Icons.language),
+              title: Text(I18n.of(context).switchLanage +
+                  '           [' +
+                  Provider.of<LanageProvider>(context, listen: false)
+                      .getLanage +
+                  ']'),
+              onTap: () async {
+                print('Switch Lanage');
+                String? res = await kvStore.getString('lanage');
+                if (res == '' || res == 'zh') {
+                  res = 'en';
+                } else {
+                  res = 'zh';
+                }
+                await kvStore.save('lanage', res);
+                Provider.of<LanageProvider>(context, listen: false)
+                    .setLanage(res.toString());
+              },
+            ),
+
             ListTile(
               leading: const Icon(Icons.exit_to_app),
               title: Text(I18n.of(context).logOut),
