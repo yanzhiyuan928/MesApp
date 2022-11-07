@@ -12,12 +12,13 @@ import 'package:first_app/utils/i18n.dart';
 import 'package:first_app/utils/kvStore.dart';
 //import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 //import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
 
 Future<void> main() async {
-  await kvStore.init();
+  //await kvStore.init();
   // String? lanage = await kvStore.getString('lanage');
   // runApp(MyApp(lanage: lanage.toString()));
   runApp(const MyApp());
@@ -96,11 +97,20 @@ class _HomePageState extends State<HomePage> {
   List<DropdownMenuItem<String>> plantList = [];
 
   Future<void> load() async {
-    //await kvStore.init();
+    await kvStore.init();
+    //addPostFrameCallback是StatefulWidget渲染结束之后的回调
+    SchedulerBinding.instance!.addPostFrameCallback((timeStamp) async {
+      String? res = await kvStore.getString('lanage');
+      Provider.of<LanageProvider>(context, listen: false)
+          .setLanage(res.toString());
+      print('SchedulerBinding');
+    });
+
     var identifyId = await kvStore.getString('identifyID');
     print(identifyId);
     if (identifyId != null) {
       isAutoLogin = true;
+      print('isAutoLogin: true');
     }
 
     await handlePlant();
@@ -166,6 +176,7 @@ class _HomePageState extends State<HomePage> {
   //生命周期函数
   //该回调只会调用一次，当屏幕首次渲染第一帧的时候调用
   void initState() {
+    print('initState');
     super.initState();
     load();
   }
@@ -174,13 +185,16 @@ class _HomePageState extends State<HomePage> {
   //生命周期函数
   //构建该widget表示的UI元素
   Widget build(BuildContext context) {
+    print('build Widget 1');
     if (isAutoLogin) {
+      print('build Widget isAutoLogin');
       Future.delayed(const Duration(milliseconds: 500), () {
         Navigator.of(context).pushAndRemoveUntil(
             MaterialPageRoute(builder: (context) => const IndexPage()),
             (route) => false);
       });
     }
+    print('build Widget 2');
     return Scaffold(
         body: Container(
       color: const Color.fromARGB(255, 228, 240, 252),
