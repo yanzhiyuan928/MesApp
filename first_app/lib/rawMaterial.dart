@@ -51,7 +51,7 @@ class _rawMaterialState extends State<rawMaterialPage> {
                   child: TextField(
                     focusNode: barCodeFocusNode,
                     controller: txtBarCode,
-                    maxLength: 36,
+                    //maxLength: 36,
                     keyboardType: TextInputType.text,
                     onTap: () {
                       setState(() {
