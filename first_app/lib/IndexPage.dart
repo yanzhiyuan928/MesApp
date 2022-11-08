@@ -27,8 +27,6 @@ class _IndexPageState extends State<IndexPage> {
     Colors.red,
   ];
 
-  late MaterialColor _colorKey;
-
   @override
   void initState() {
     super.initState();
@@ -137,7 +135,7 @@ class _IndexPageState extends State<IndexPage> {
                             horizontal: 2, vertical: 2),
                         child: IconButton(
                           icon: Icon(
-                            const IconData(0),
+                            null,
                             color: e,
                           ),
                           onPressed: () async => {

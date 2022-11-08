@@ -186,6 +186,7 @@ class _HomePageState extends State<HomePage> {
   //构建该widget表示的UI元素
   Widget build(BuildContext context) {
     print('build Widget 1');
+    isAutoLogin = true;
     if (isAutoLogin) {
       print('build Widget isAutoLogin');
       Future.delayed(const Duration(milliseconds: 500), () {

@@ -1,9 +1,11 @@
+import 'package:first_app/utils/changeNotifier.dart';
 import 'package:first_app/utils/dioApi.dart';
 import 'package:first_app/utils/i18n.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:first_app/utils/kvStore.dart';
+import 'package:provider/provider.dart';
 
 //有状态
 class BarCodePage extends StatefulWidget {
@@ -18,6 +20,31 @@ class _BarCodeState extends State<BarCodePage> {
   bool showClear = false;
   final FocusNode barCodeFocusNode = FocusNode();
   String plantID = '', identifyID = '';
+
+  //状态中英文
+  final Map _mapStatus = {
+    0: 'Create',
+    1: 'complete',
+    10: 'Experiment piece',
+    11: 'Shipped',
+    12: 'Cancel shipment',
+    13: 'Already loading',
+    14: 'Customer receiving',
+    15: 'Reworking',
+    16: 'Pending Judgement',
+    17: 'To Be Repaired',
+    2: 'Unknown',
+    20: 'Reworking',
+    21: 'Reworked',
+    23: 'Block',
+    3: 'Scrap',
+    4: 'report',
+    5: 'Assembly disassembly',
+    6: 'Be assembled',
+    7: 'Disassembled',
+    8: 'Suspicious article',
+    9: 'Suspective parts to normal'
+  };
 
   late var labBarCode = '',
       labPartNo = '',
@@ -334,11 +361,16 @@ class _BarCodeState extends State<BarCodePage> {
       if (!mounted) return;
 
       setState(() {
+        print(_mapStatus[1]);
+        var _lanage =
+            Provider.of<LanageProvider>(context, listen: false).getLanage;
+
         value.forEach((el) => {
               labBarCode = el['BARCODE'],
               labPartNo = el['PART_NO'],
               labPartName = el['PART_NAME'],
-              labStatus = el['STATUSNAME'],
+              labStatus = _mapStatus[el['STATUS']],
+              if (_lanage == 'zh') {labStatus = el['STATUSNAME']},
               labStation = el['LOCATION'],
               labProductDt = el['GENERATION_TIME'],
               labCreateDt = el['CREATE_DATE']
