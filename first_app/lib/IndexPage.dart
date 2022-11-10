@@ -163,11 +163,7 @@ class _IndexPageState extends State<IndexPage> {
               onTap: () async {
                 print('Switch Lanage');
                 String? res = await kvStore.getString('lanage');
-                if (res == '' || res == 'zh') {
-                  res = 'en';
-                } else {
-                  res = 'zh';
-                }
+                res = res == 'en' ? 'zh' : 'en';
                 await kvStore.save('lanage', res);
                 Provider.of<LanageProvider>(context, listen: false)
                     .setLanage(res.toString());

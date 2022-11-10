@@ -49,9 +49,10 @@ class _assemblyPartState extends State<assemblyPartPage> {
                 child: Container(
                   margin: const EdgeInsets.symmetric(horizontal: 5),
                   child: TextField(
+                    autofocus: true,
                     focusNode: barCodeFocusNode,
                     controller: txtBarCode,
-                    maxLength: 36,
+                    //maxLength: 36,
                     keyboardType: TextInputType.text,
                     onTap: () {
                       setState(() {
@@ -179,6 +180,7 @@ class _assemblyPartState extends State<assemblyPartPage> {
     await sendRequest(getAssemblyPartTrace, Method.get, params).then((value) {
       print(value);
       if (value.length == 0 || value[0]['ERROR'] != null) {
+        txtBarCode.text = '';
         return;
       }
       if (!mounted) return;

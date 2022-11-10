@@ -82,6 +82,7 @@ class _BarCodeState extends State<BarCodePage> {
                 child: Container(
                   margin: const EdgeInsets.symmetric(horizontal: 5),
                   child: TextField(
+                    autofocus: true,
                     focusNode: barCodeFocusNode,
                     controller: txtBarCode,
                     //maxLength: 36,
@@ -167,6 +168,7 @@ class _BarCodeState extends State<BarCodePage> {
               ),
             ],
           ),
+          Container(margin: const EdgeInsets.symmetric(vertical: 10)),
           Flex(
             direction: Axis.horizontal,
             children: [
@@ -338,6 +340,9 @@ class _BarCodeState extends State<BarCodePage> {
     try {
       barcodeScanRes = await FlutterBarcodeScanner.scanBarcode(
           '#ff6666', 'Cancel', true, ScanMode.QR);
+      if (barcodeScanRes == '-1') {
+        return;
+      }
       print(barcodeScanRes);
     } on PlatformException {
       barcodeScanRes = 'Failed to get platform version.';
@@ -357,6 +362,10 @@ class _BarCodeState extends State<BarCodePage> {
       'identifyID': identifyID
     };
     await sendRequest(getBarcodeInfo, Method.get, params).then((value) {
+      if (value.length == 0) {
+        txtBarCode.text = '';
+        return;
+      }
       print(value);
       if (!mounted) return;
 

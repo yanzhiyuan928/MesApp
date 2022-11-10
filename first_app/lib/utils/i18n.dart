@@ -29,7 +29,7 @@ class I18n {
       'logOut': 'LogOut',
       'theme': 'Theme',
       'switchLanage': 'Lanage',
-      'setting': 'setting',
+      'setting': 'Setting',
       'barCode': 'BarCode',
       'partNo': 'Part No',
       'partName': 'Part Name',

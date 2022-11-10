@@ -49,6 +49,7 @@ class _ProductionState extends State<ProductionPage> {
                 child: Container(
                   margin: const EdgeInsets.symmetric(horizontal: 5),
                   child: TextField(
+                    autofocus: true,
                     focusNode: barCodeFocusNode,
                     controller: txtBarCode,
                     //maxLength: 36,
@@ -179,6 +180,7 @@ class _ProductionState extends State<ProductionPage> {
     await sendRequest(getProductionLog, Method.get, params).then((value) {
       print(value);
       if (value.length == 0 || value[0]['ERROR'] != null) {
+        txtBarCode.text = '';
         return;
       }
       if (!mounted) return;
