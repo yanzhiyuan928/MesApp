@@ -138,7 +138,7 @@ class _BarCodeState extends State<BarCodePage> {
                       I18n.of(context).search,
                       style: const TextStyle(
                           color: Colors.white,
-                          fontSize: 16,
+                          fontSize: 14,
                           fontWeight: FontWeight.bold),
                     ),
                   ),
