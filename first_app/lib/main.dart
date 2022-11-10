@@ -140,7 +140,10 @@ class _HomePageState extends State<HomePage> {
 
   //登录
   Future<bool> postlogIn() async {
-    var plantID = await kvStore.getString('plantID') as String;
+    var plantID = await kvStore.getString('plantID');
+    if (plantID == null) {
+      return isSuccess;
+    }
     var pwdWord = generateMd5(txtPwd.text);
     Map<String, dynamic> params = {
       'UserName': 'admin',

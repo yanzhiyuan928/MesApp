@@ -362,7 +362,7 @@ class _BarCodeState extends State<BarCodePage> {
       'identifyID': identifyID
     };
     await sendRequest(getBarcodeInfo, Method.get, params).then((value) {
-      if (value.length == 0) {
+      if (value.length == 0 || value[0]['ERROR'] != null) {
         txtBarCode.text = '';
         return;
       }
@@ -370,7 +370,6 @@ class _BarCodeState extends State<BarCodePage> {
       if (!mounted) return;
 
       setState(() {
-        print(_mapStatus[1]);
         var _lanage =
             Provider.of<LanageProvider>(context, listen: false).getLanage;
 
