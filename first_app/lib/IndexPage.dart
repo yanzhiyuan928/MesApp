@@ -155,11 +155,7 @@ class _IndexPageState extends State<IndexPage> {
             ),
             ListTile(
               leading: const Icon(Icons.language),
-              title: Text(I18n.of(context).switchLanage +
-                  '           [' +
-                  Provider.of<LanageProvider>(context, listen: false)
-                      .getLanage +
-                  ']'),
+              title: Text(I18n.of(context).switchLanage),
               onTap: () async {
                 print('Switch Lanage');
                 String? res = await kvStore.getString('lanage');
