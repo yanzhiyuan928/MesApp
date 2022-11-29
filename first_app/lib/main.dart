@@ -65,7 +65,7 @@ class MyApp extends StatelessWidget {
                 if (result.isNotEmpty) {
                   return _locale;
                 }
-                return const Locale('zh');
+                return const Locale('en');
               },
               locale: Locale(value2.getLanage),
             );
@@ -154,6 +154,7 @@ class _HomePageState extends State<HomePage> {
       print(value);
       if (value.length == 0 || value[0]['ERROR'] != null) {
         kvStore.remove('identifyID');
+        isSuccess = false;
         print('登录失败');
       } else {
         kvStore.save('userId', txtUid.text);

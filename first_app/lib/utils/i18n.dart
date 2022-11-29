@@ -34,7 +34,7 @@ class I18n {
       'partNo': 'Part No',
       'partName': 'Part Name',
       'state': 'Status',
-      'location': 'Location',
+      'location': 'Station',
       'generationDt': 'Production Time',
       'createDt': 'Create Time',
     },

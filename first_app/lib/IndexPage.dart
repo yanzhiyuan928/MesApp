@@ -115,10 +115,10 @@ class _IndexPageState extends State<IndexPage> {
                 ),
               ),
             ),
-            ListTile(
-              leading: const Icon(Icons.settings),
-              title: Text(I18n.of(context).setting),
-            ),
+            // ListTile(
+            //   leading: const Icon(Icons.settings),
+            //   title: Text(I18n.of(context).setting),
+            // ),
             ListTile(
               leading: const Icon(Icons.color_lens),
               title: Text(I18n.of(context).theme),
