@@ -2,6 +2,7 @@
 
 import 'package:first_app/utils/dioApi.dart';
 import 'package:first_app/utils/i18n.dart';
+import 'package:first_app/utils/toast.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
@@ -66,8 +67,9 @@ class _ProductionState extends State<ProductionPage> {
                       });
                     },
                     decoration: InputDecoration(
-                      prefixIcon: const Icon(Icons.fullscreen_sharp,
+                      prefixIcon: const Icon(Icons.qr_code,
                           size: 25, color: Colors.blue),
+                      prefixIconConstraints: const BoxConstraints(),
                       hintText: I18n.of(context).inputBarCode,
                       suffixIcon: Visibility(
                         visible: showClear,
@@ -159,6 +161,9 @@ class _ProductionState extends State<ProductionPage> {
     try {
       barcodeScanRes = await FlutterBarcodeScanner.scanBarcode(
           '#ff6666', 'Cancel', true, ScanMode.QR);
+      if (barcodeScanRes == '-1') {
+        return;
+      }
       print(barcodeScanRes);
     } on PlatformException {
       barcodeScanRes = 'Failed to get platform version.';
@@ -180,7 +185,8 @@ class _ProductionState extends State<ProductionPage> {
     await sendRequest(getProductionLog, Method.get, params).then((value) {
       print(value);
       if (value.length == 0 || value[0]['ERROR'] != null) {
-        txtBarCode.text = '';
+        showErrorToast(msg: I18n.of(context).data_empty);
+        txtBarCode.clear();
         return;
       }
       if (!mounted) return;
@@ -191,6 +197,7 @@ class _ProductionState extends State<ProductionPage> {
     }).catchError((error) {
       if (error) {
         print(error.toString());
+        showErrorToast(msg: error.toString());
       }
     });
   }

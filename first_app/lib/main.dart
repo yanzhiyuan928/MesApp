@@ -10,6 +10,7 @@ import 'package:first_app/utils/changeNotifier.dart';
 import 'package:first_app/utils/dioApi.dart';
 import 'package:first_app/utils/i18n.dart';
 import 'package:first_app/utils/kvStore.dart';
+import 'package:first_app/utils/toast.dart';
 //import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
@@ -29,6 +30,7 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    //ToastContext().init(context);
     return MultiProvider(
         providers: [
           ChangeNotifierProvider.value(value: ThemeProvider()),
@@ -142,6 +144,7 @@ class _HomePageState extends State<HomePage> {
   Future<bool> postlogIn() async {
     var plantID = await kvStore.getString('plantID');
     if (plantID == null) {
+      showErrorToast(msg: I18n.of(context).selectPlant);
       return isSuccess;
     }
     var pwdWord = generateMd5(txtPwd.text);
@@ -155,6 +158,8 @@ class _HomePageState extends State<HomePage> {
       if (value.length == 0 || value[0]['ERROR'] != null) {
         kvStore.remove('identifyID');
         isSuccess = false;
+        showErrorToast(msg: I18n.of(context).login_error);
+        txtPwd.clear();
         print('登录失败');
       } else {
         kvStore.save('userId', txtUid.text);

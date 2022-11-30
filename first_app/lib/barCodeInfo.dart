@@ -1,6 +1,7 @@
 import 'package:first_app/utils/changeNotifier.dart';
 import 'package:first_app/utils/dioApi.dart';
 import 'package:first_app/utils/i18n.dart';
+import 'package:first_app/utils/toast.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
@@ -99,8 +100,9 @@ class _BarCodeState extends State<BarCodePage> {
                       });
                     },
                     decoration: InputDecoration(
-                      prefixIcon: const Icon(Icons.fullscreen_sharp,
+                      prefixIcon: const Icon(Icons.qr_code,
                           size: 25, color: Colors.blue),
+                      prefixIconConstraints: const BoxConstraints(),
                       hintText: I18n.of(context).inputBarCode,
                       suffixIcon: Visibility(
                         visible: showClear,
@@ -363,16 +365,15 @@ class _BarCodeState extends State<BarCodePage> {
     };
     await sendRequest(getBarcodeInfo, Method.get, params).then((value) {
       if (value.length == 0 || value[0]['ERROR'] != null) {
-        txtBarCode.text = '';
+        showErrorToast(msg: I18n.of(context).data_empty);
+        txtBarCode.clear();
         return;
       }
       print(value);
       if (!mounted) return;
-
       setState(() {
         var _lanage =
             Provider.of<LanageProvider>(context, listen: false).getLanage;
-
         value.forEach((el) => {
               labBarCode = el['BARCODE'],
               labPartNo = el['PART_NO'],
@@ -387,6 +388,7 @@ class _BarCodeState extends State<BarCodePage> {
     }).catchError((error) {
       if (error) {
         print(error.toString());
+        showErrorToast(msg: error.toString());
       }
     });
   }

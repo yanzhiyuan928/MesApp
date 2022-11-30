@@ -2,6 +2,7 @@
 
 import 'package:first_app/utils/dioApi.dart';
 import 'package:first_app/utils/i18n.dart';
+import 'package:first_app/utils/toast.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
@@ -66,8 +67,9 @@ class _assemblyPartState extends State<assemblyPartPage> {
                       });
                     },
                     decoration: InputDecoration(
-                      prefixIcon: const Icon(Icons.fullscreen_sharp,
+                      prefixIcon: const Icon(Icons.qr_code,
                           size: 25, color: Colors.blue),
+                      prefixIconConstraints: const BoxConstraints(),
                       hintText: I18n.of(context).inputBarCode,
                       suffixIcon: Visibility(
                         visible: showClear,
@@ -180,7 +182,8 @@ class _assemblyPartState extends State<assemblyPartPage> {
     await sendRequest(getAssemblyPartTrace, Method.get, params).then((value) {
       print(value);
       if (value.length == 0 || value[0]['ERROR'] != null) {
-        txtBarCode.text = '';
+        showErrorToast(msg: I18n.of(context).data_empty);
+        txtBarCode.clear();
         return;
       }
       if (!mounted) return;
@@ -191,6 +194,7 @@ class _assemblyPartState extends State<assemblyPartPage> {
     }).catchError((error) {
       if (error) {
         print(error.toString());
+        showErrorToast(msg: error.toString());
       }
     });
   }

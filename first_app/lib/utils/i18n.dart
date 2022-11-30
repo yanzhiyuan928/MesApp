@@ -18,6 +18,7 @@ class I18n {
       "login": "Login",
       "login_uid": "Please enter account number ",
       "login_pwd": "Please enter password number",
+      "login_error": "Login failed. Retry",
       "menu": "Menu List",
       'queryBarCode': 'Query BarCode',
       'machineRecords': 'Production Log Records',
@@ -37,12 +38,14 @@ class I18n {
       'location': 'Station',
       'generationDt': 'Production Time',
       'createDt': 'Create Time',
+      'data_empty': 'Query data is empty',
     },
     "zh": {
       "selectPlant": "<请选择工厂>",
       "login": "登录",
       "login_uid": "请输入账号",
       "login_pwd": "请输入密码",
+      "login_error": "登录失败，重新输入",
       "menu": "主菜单",
       'queryBarCode': '条码查询',
       'machineRecords': '加工记录',
@@ -62,6 +65,7 @@ class I18n {
       'location': '工位',
       'generationDt': '生产时间',
       'createDt': '生产时间',
+      'data_empty': '查询数据为空',
     }
   };
 
@@ -81,6 +85,11 @@ class I18n {
   // ignore: non_constant_identifier_names
   String get login_pwd {
     return _localizedValues[locale.languageCode]!["login_pwd"] as String;
+  }
+
+  // ignore: non_constant_identifier_names
+  String get login_error {
+    return _localizedValues[locale.languageCode]!["login_error"] as String;
   }
 
   String get menu {
@@ -157,6 +166,11 @@ class I18n {
 
   String get createDt {
     return _localizedValues[locale.languageCode]!["createDt"] as String;
+  }
+
+  // ignore: non_constant_identifier_names
+  String get data_empty {
+    return _localizedValues[locale.languageCode]!["data_empty"] as String;
   }
 }
 
