@@ -17,7 +17,7 @@ showSuccessToast({required String msg, int timeInSecForIosWeb = 1}) {
       msg: msg,
       toastLength: Toast.LENGTH_SHORT,
       gravity: ToastGravity.TOP,
-      timeInSecForIosWeb: 1,
+      timeInSecForIosWeb: timeInSecForIosWeb,
       backgroundColor: Colors.green,
       textColor: Colors.white,
       fontSize: 16.0);
