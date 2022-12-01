@@ -60,6 +60,12 @@ class _BarCodeState extends State<BarCodePage> {
   //该回调只会调用一次，当屏幕首次渲染第一帧的时候调用
   void initState() {
     super.initState();
+    load();
+  }
+
+  Future<void> load() async {
+    plantID = await kvStore.getString('plantID') as String;
+    identifyID = await kvStore.getString('identifyID') as String;
     if (mounted) {
       setState(() {});
     }
@@ -131,10 +137,7 @@ class _BarCodeState extends State<BarCodePage> {
                       )),
                     ),
                     onPressed: () async {
-                      plantID = await kvStore.getString('plantID') as String;
-                      identifyID =
-                          await kvStore.getString('identifyID') as String;
-                      await getData(txtBarCode.text, plantID, identifyID);
+                      await getData(txtBarCode.text);
                     },
                     child: Text(
                       I18n.of(context).search,
@@ -340,6 +343,7 @@ class _BarCodeState extends State<BarCodePage> {
     String barcodeScanRes;
     // Platform messages may fail, so we use a try/catch PlatformException.
     try {
+      txtBarCode.clear();
       barcodeScanRes = await FlutterBarcodeScanner.scanBarcode(
           '#ff6666', 'Cancel', true, ScanMode.QR);
       if (barcodeScanRes == '-1') {
@@ -353,14 +357,14 @@ class _BarCodeState extends State<BarCodePage> {
 
     setState(() {
       txtBarCode.text = barcodeScanRes;
+      getData(txtBarCode.text);
     });
   }
 
-  Future<void> getData(
-      String barCode, String plantId, String identifyID) async {
+  Future<void> getData(String barCode) async {
     Map<String, dynamic> params = {
       'barcode': barCode,
-      'plantID': plantId,
+      'plantID': plantID,
       'identifyID': identifyID
     };
     await sendRequest(getBarcodeInfo, Method.get, params).then((value) {

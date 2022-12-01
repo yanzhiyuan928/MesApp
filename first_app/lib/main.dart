@@ -151,7 +151,7 @@ class _HomePageState extends State<HomePage> {
     Map<String, dynamic> params = {
       'UserName': 'admin',
       'Password': pwdWord,
-      'PlantID': plantID,
+      'PlantID': plantID
     };
     await sendRequest(logIn, Method.post, params).then((value) {
       print(value);
